@@ -1,26 +1,12 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { Box } from "@cloudscape-design/components";
+import CloudscapeTable from "./Components/CloudscapeTable/CloudscapeTable";
+import { DynamicColumns } from "./MockData/AllColumns";
+import { RowData } from "./MockData/AllItems";
 
-function App() {
+export default function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Box>
+      <CloudscapeTable allColumns={DynamicColumns} allItems={RowData}></CloudscapeTable>
+    </Box>
   );
 }
-
-export default App;
