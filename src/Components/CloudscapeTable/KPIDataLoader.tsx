@@ -1,15 +1,15 @@
-import { Box, TableProps } from "@cloudscape-design/components";
+import { TableProps } from "@cloudscape-design/components";
 import moment from "moment-timezone";
 import * as React from "react";
 import { useEffect } from "react";
 import { DynamicColumns } from "../../MockData/AllColumns";
 import { RowData } from "../../MockData/AllItems";
+import ErrorContainer from "../GenericComponents/ErrorContainer";
+import LoadingSpinner from "../GenericComponents/LoadingSpinner";
 import { DefaultDateFormat, DefaultDateTimeFormat } from "./CellComponents";
 import { CloudscapeGenericTable } from "./CloudscapeGenericTable";
 import { DynamicColumnDetails } from "./CloudscapeInterface";
 import { generateColumnDefinitions } from "./CloudscapeTableConfig";
-import LoadingSpinner from "../GenericComponents/LoadingSpinner";
-import ErrorContainer from "../GenericComponents/ErrorContainer";
 
 interface KPIDataLoaderProps {
   kpiEntityId: string;
@@ -37,6 +37,7 @@ const KPIDataLoader: React.FC<KPIDataLoaderProps> = ({ kpiEntityId, kpiEntityNam
 
   useEffect(() => {
     dynamicsHandler();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pcfContext]);
 
   function mockAsyncOperation() {

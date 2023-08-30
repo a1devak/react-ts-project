@@ -1,9 +1,9 @@
 import { useCollection } from "@cloudscape-design/collection-hooks";
 import { CollectionPreferencesProps, Header, Pagination, PropertyFilter, PropertyFilterProps, Table, TableProps } from "@cloudscape-design/components";
-import { Preferences, TableEmptyState, TableNoMatchState, getMatchesCountText, paginationAriaLabels, propertyFilterI18nStrings } from "../GenericComponents/Utils";
-import { BLANK_SEARCH_AND, extractFieldNamesForDefaultVisibleContent, generateFilteringProperties, generateVisibleContentOptions } from "./CloudscapeTableConfig";
 import * as React from "react";
+import { Preferences, TableEmptyState, TableNoMatchState, getMatchesCountText, paginationAriaLabels, propertyFilterI18nStrings } from "../GenericComponents/Utils";
 import { DynamicColumnDetails } from "./CloudscapeInterface";
+import { BLANK_SEARCH_AND, extractFieldNamesForDefaultVisibleContent, generateFilteringProperties, generateVisibleContentOptions } from "./CloudscapeTableConfig";
 
 interface CloudscapeGenericTableProps {
   tableColumnDefinitions: TableProps.ColumnDefinition<any>[];
@@ -12,9 +12,8 @@ interface CloudscapeGenericTableProps {
   itemsPerPage: number;
 }
 export const CloudscapeGenericTable: React.FC<CloudscapeGenericTableProps> = ({ tableColumnDefinitions, allColumns, allItems, itemsPerPage }) => {
-
   console.log("allColumns?.columnInfo?.sortingColumn ", allColumns?.columnInfo?.sortingColumn);
-  
+
   const [tableRowData, setTableRowData] = React.useState<any[]>([]);
 
   const [tableDefaultPreferences, setTableDefaultPreferences] = React.useState<CollectionPreferencesProps.Preferences>({});
@@ -56,14 +55,8 @@ export const CloudscapeGenericTable: React.FC<CloudscapeGenericTableProps> = ({ 
   const { items, actions, filteredItemsCount, collectionProps, paginationProps, propertyFilterProps } = useCollection(tableRowData, {
     propertyFiltering: {
       filteringProperties,
-      empty: <TableEmptyState resourceName="No results" />,
-      noMatch: (
-        <TableNoMatchState
-          onClearFilter={() => {
-            actions.setPropertyFiltering({ tokens: [], operation: "and" });
-          }}
-        />
-      ),
+      empty: <TableEmptyState />,
+      noMatch: <TableNoMatchState />,
     },
     pagination: {
       pageSize: tableDefaultPreferences.pageSize,
