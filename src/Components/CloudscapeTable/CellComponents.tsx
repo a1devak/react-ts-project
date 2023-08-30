@@ -6,16 +6,23 @@ import moment from "moment-timezone";
 export const DefaultDateFormat = "YYYY-MM-DD";
 export const DefaultDateTimeFormat = "YYYY-MM-DD HH:mm:ss";
 
-export const getDataToDisplay = (
-  item: any,
-  dataEntity: DataEntity,
-  pcfContext: any,
-  primaryEntityName: string
-) => {
+export const getDataToDisplay = (item: any, dataEntity: DataEntity, pcfContext: any, primaryEntityName: string) => {
   const dataType = dataEntity.metadata.type;
   const data = item[dataEntity.fieldName] ? item[dataEntity.fieldName] : "";
 
   switch (dataType) {
+    case "date":
+      if (data) {
+        const desiredFormat = dataEntity?.metadata?.dateFormat ? dataEntity?.metadata?.dateFormat : "YYYY-MM-DD";
+        return moment(data).format(desiredFormat);
+      }
+      return ""; // Use your desired format
+    case "dateTime":
+      if (data) {
+        const desiredFormat = dataEntity?.metadata?.dateFormat ? dataEntity?.metadata?.dateFormat : "YYYY-MM-DD HH:mm:ss";
+        return moment(data).format(desiredFormat);
+      }
+      return "";
     case "link":
       if (data) {
         const handleCLick = () => {
@@ -32,7 +39,7 @@ export const getDataToDisplay = (
       if (data) {
         return (
           <Link external href={dataEntity.metadata.link || ""}>
-            {data || 'external link'}
+            {data || "external link"}
           </Link>
         );
       }

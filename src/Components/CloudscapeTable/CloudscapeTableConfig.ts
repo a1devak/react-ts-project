@@ -1,17 +1,7 @@
-import {
-  FilteringProperty,
-  PropertyFilterProps,
-} from "@cloudscape-design/components/property-filter/interfaces";
-import {
-  ColumnDataType,
-  DataEntity,
-  DynamicColumnDetails,
-} from "./CloudscapeInterface";
-import {
-  CollectionPreferencesProps,
-  TableProps,
-} from "@cloudscape-design/components";
+import { CollectionPreferencesProps, TableProps } from "@cloudscape-design/components";
+import { PropertyFilterProps } from "@cloudscape-design/components/property-filter/interfaces";
 import { getDataToDisplay } from "./CellComponents";
+import { DataEntity, DynamicColumnDetails } from "./CloudscapeInterface";
 
 export const DEFAULT_PAGE_SIZE_IS_20 = 20;
 export const BLANK_SEARCH_AND = {
@@ -19,17 +9,11 @@ export const BLANK_SEARCH_AND = {
   operation: "and",
 } as PropertyFilterProps.Query;
 
-export function extractFieldNamesForDefaultVisibleContent(
-  dynamicColumnDetails: DynamicColumnDetails
-): string[] {
-  return dynamicColumnDetails.data.map(
-    (dataEntity: DataEntity) => dataEntity.fieldName
-  );
+export function extractFieldNamesForDefaultVisibleContent(dynamicColumnDetails: DynamicColumnDetails): string[] {
+  return dynamicColumnDetails.data.map((dataEntity: DataEntity) => dataEntity.fieldName);
 }
 
-export function generateVisibleContentOptions(
-  dynamicColumnDetails: DynamicColumnDetails | undefined
-): CollectionPreferencesProps.VisibleContentOptionsGroup[] {
+export function generateVisibleContentOptions(dynamicColumnDetails: DynamicColumnDetails | undefined): CollectionPreferencesProps.VisibleContentOptionsGroup[] {
   if (dynamicColumnDetails) {
     const groups: CollectionPreferencesProps.VisibleContentOptionsGroup[] = [
       {
@@ -47,52 +31,18 @@ export function generateVisibleContentOptions(
   return [];
 }
 
-export function generateFilteringProperties(
-  dynamicColumnDetails: DynamicColumnDetails
-): FilteringProperty[] {
-  const filteringProperties: FilteringProperty[] =
-    dynamicColumnDetails.data.map((dataEntity: DataEntity) => {
-      const dataType: ColumnDataType = dataEntity.metadata.type;
-      let operators: string[] = [];
-
-      if (dataType === "string") {
-        operators = [":", "!:", "=", "!="];
-      } else if (dataType === "number") {
-        operators = ["=", "!=", "<", "<=", ">", ">="];
-      } else if (dataType === "date" || dataType === "dateTime") {
-        operators = ["=", "!=", "<", "<=", ">", ">="];
-      } else {
-        operators = [":", "!:", "=", "!="];
-      }
-
-      return {
-        key: dataEntity.fieldName,
-        propertyLabel: dataEntity.displayName,
-        groupValuesLabel: `${dataEntity.displayName} values`,
-        operators,
-      } as FilteringProperty;
-    });
-
-  return filteringProperties;
-}
-
-export function generateColumnDefinitions(
-  dynamicColumnDetails: DynamicColumnDetails,
-  pcfContext: any,
-  primaryEntityName: string
-): TableProps.ColumnDefinition<DataEntity>[] {
-  const columnDefinitions: TableProps.ColumnDefinition<DataEntity>[] =
-    dynamicColumnDetails.data.map((dataEntity: DataEntity) => {
-      return {
-        id: dataEntity.fieldName,
-        header: dataEntity.displayName,
-        width: dataEntity.minWidth | 150,
-        minWidth:dataEntity.minWidth | 150,
-        maxWidth: dataEntity.maxWidth | 200,
-        cell: (item: any) => getDataToDisplay(item, dataEntity, pcfContext, primaryEntityName),
-        sortingField: dataEntity.fieldName,
-      } as TableProps.ColumnDefinition<DataEntity>;
-    });
+export function generateColumnDefinitions(dynamicColumnDetails: DynamicColumnDetails, pcfContext: any, primaryEntityName: string): TableProps.ColumnDefinition<DataEntity>[] {
+  const columnDefinitions: TableProps.ColumnDefinition<DataEntity>[] = dynamicColumnDetails.data.map((dataEntity: DataEntity) => {
+    return {
+      id: dataEntity.fieldName,
+      header: dataEntity.displayName,
+      width: dataEntity.minWidth | 150,
+      minWidth: dataEntity.minWidth | 150,
+      maxWidth: dataEntity.maxWidth | 200,
+      cell: (item: any) => getDataToDisplay(item, dataEntity, pcfContext, primaryEntityName),
+      sortingField: dataEntity.fieldName,
+    } as TableProps.ColumnDefinition<DataEntity>;
+  });
 
   return columnDefinitions;
 }

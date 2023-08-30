@@ -1,9 +1,11 @@
 import { useCollection } from "@cloudscape-design/collection-hooks";
 import { CollectionPreferencesProps, Header, Pagination, PropertyFilter, PropertyFilterProps, Table, TableProps } from "@cloudscape-design/components";
+import { FilteringProperty } from "@cloudscape-design/components/property-filter/interfaces";
 import * as React from "react";
+import { DateTimeForm, formatDateTime } from "../GenericComponents/TableDateFilterForm";
 import { Preferences, TableEmptyState, TableNoMatchState, getMatchesCountText, paginationAriaLabels, propertyFilterI18nStrings } from "../GenericComponents/Utils";
-import { DynamicColumnDetails } from "./CloudscapeInterface";
-import { BLANK_SEARCH_AND, extractFieldNamesForDefaultVisibleContent, generateFilteringProperties, generateVisibleContentOptions } from "./CloudscapeTableConfig";
+import { ColumnDataType, DataEntity, DynamicColumnDetails } from "./CloudscapeInterface";
+import { BLANK_SEARCH_AND, extractFieldNamesForDefaultVisibleContent, generateVisibleContentOptions } from "./CloudscapeTableConfig";
 
 interface CloudscapeGenericTableProps {
   tableColumnDefinitions: TableProps.ColumnDefinition<any>[];
@@ -12,8 +14,6 @@ interface CloudscapeGenericTableProps {
   itemsPerPage: number;
 }
 export const CloudscapeGenericTable: React.FC<CloudscapeGenericTableProps> = ({ tableColumnDefinitions, allColumns, allItems, itemsPerPage }) => {
-  console.log("allColumns?.columnInfo?.sortingColumn ", allColumns?.columnInfo?.sortingColumn);
-
   const [tableRowData, setTableRowData] = React.useState<any[]>([]);
 
   const [tableDefaultPreferences, setTableDefaultPreferences] = React.useState<CollectionPreferencesProps.Preferences>({});
@@ -28,6 +28,7 @@ export const CloudscapeGenericTable: React.FC<CloudscapeGenericTableProps> = ({ 
 
   React.useEffect(() => {
     setTableRowData(allItems || []);
+    console.log("All Items ", JSON.stringify(allItems));
   }, [allItems]);
 
   // generating Table default preferences from allColumns
@@ -51,6 +52,37 @@ export const CloudscapeGenericTable: React.FC<CloudscapeGenericTableProps> = ({ 
       setFilteringProperties(properties);
     }
   }, [allColumns]);
+
+  function generateFilteringProperties(dynamicColumnDetails: DynamicColumnDetails): FilteringProperty[] {
+    const filteringProperties: FilteringProperty[] = dynamicColumnDetails.data.map((dataEntity: DataEntity) => {
+      const dataType: ColumnDataType = dataEntity.metadata.type;
+      let operators: any[] = [];
+
+      if (dataType === "string") {
+        operators = [":", "!:", "=", "!="];
+      } else if (dataType === "number") {
+        operators = ["=", "!=", "<", "<=", ">", ">="];
+      } else if (dataType === "date" || dataType === "dateTime") {
+        operators = ["=", "!=", "<", "<=", ">", ">="].map((operator) => ({
+          operator,
+          form: DateTimeForm,
+          format: formatDateTime,
+          match: "datetime",
+        }));
+      } else {
+        operators = [":", "!:", "=", "!="];
+      }
+
+      return {
+        key: dataEntity.fieldName,
+        propertyLabel: dataEntity.displayName,
+        groupValuesLabel: `${dataEntity.displayName} values`,
+        operators,
+      } as FilteringProperty;
+    });
+
+    return filteringProperties;
+  }
 
   const { items, actions, filteredItemsCount, collectionProps, paginationProps, propertyFilterProps } = useCollection(tableRowData, {
     propertyFiltering: {

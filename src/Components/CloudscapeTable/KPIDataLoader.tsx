@@ -96,14 +96,14 @@ const KPIDataLoader: React.FC<KPIDataLoaderProps> = ({ kpiEntityId, kpiEntityNam
           if (dataEntity.metadata.type === "date") {
             const originalDate = row[dataEntity.fieldName];
             if (originalDate) {
-              modifiedRow[dataEntity.fieldName] = moment(originalDate).format(dataEntity.metadata.dateFormat || DefaultDateFormat);
+              modifiedRow[dataEntity.fieldName] = moment(originalDate);
             }
           }
 
           if (dataEntity.metadata.type === "dateTime") {
             const originalDate = row[dataEntity.fieldName];
             if (originalDate) {
-              modifiedRow[dataEntity.fieldName] = moment(originalDate).format(dataEntity.metadata.dateFormat || DefaultDateTimeFormat);
+              modifiedRow[dataEntity.fieldName] = moment(originalDate);
             }
           }
 
