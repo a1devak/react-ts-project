@@ -1,5 +1,5 @@
 import { Box } from "@cloudscape-design/components";
-import CloudscapeTable from "./Components/CloudscapeTable/CloudscapeTable";
+import KPIDataLoader from "./Components/CloudscapeTable/KPIDataLoader";
 
 export default function App() {
   const props = {
@@ -10,7 +10,7 @@ export default function App() {
 
   return (
     <Box>
-      <CloudscapeTable kpiEntityId={props.kpiEntityId} kpiEntityName={props.kpiEntityName} pcfContext={props.pcfContext} itemsPerPage={10}></CloudscapeTable>
+      <KPIDataLoader kpiEntityId={props.kpiEntityId} kpiEntityName={props.kpiEntityName} pcfContext={props.pcfContext} itemsPerPage={10}></KPIDataLoader>
     </Box>
   );
 }

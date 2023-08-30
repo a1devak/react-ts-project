@@ -1,6 +1,6 @@
 import * as React from "react";
 import { DataEntity } from "./CloudscapeInterface";
-import { Link } from "@cloudscape-design/components";
+import { Box, Link } from "@cloudscape-design/components";
 import moment from "moment-timezone";
 
 export const DefaultDateFormat = "YYYY-MM-DD";
@@ -16,24 +16,6 @@ export const getDataToDisplay = (
   const data = item[dataEntity.fieldName] ? item[dataEntity.fieldName] : "";
 
   switch (dataType) {
-    case "date":
-      if (data) {
-        const desiredFormat = dataEntity?.metadata?.dateFormat
-          ? dataEntity?.metadata?.dateFormat
-          : DefaultDateFormat;
-        return moment(data).format(desiredFormat);
-      }
-      return ""; // Use your desired format
-    case "dateTime":
-      if (data) {
-        const desiredFormat = dataEntity?.metadata?.dateFormat
-          ? dataEntity?.metadata?.dateFormat
-          : DefaultDateTimeFormat;
-        return moment(data).format(desiredFormat);
-      }
-      return "";
-    case "boolean":
-      return data ? "Yes" : "No";
     case "link":
       if (data) {
         const handleCLick = () => {
@@ -58,13 +40,10 @@ export const getDataToDisplay = (
     default:
       return (
         <>
-          <span>{`${data}`}</span>
+          <Box>{`${data}`}</Box>
+          {/* Future examles  */}
+          {/* <Box textAlign="center">{`${data}`}</Box> */}
         </>
       );
   }
 };
-
-// this._pcfContext.navigation.openForm({
-//   entityName: this._primaryEntityName,
-//   entityId: item[this._primaryEntityName + "id"]
-// });
