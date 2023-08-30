@@ -2,6 +2,7 @@ import { DynamicColumnDetails } from "../Components/CloudscapeTable/CloudscapeIn
 
 export const DynamicColumns1: DynamicColumnDetails = {
   "columnInfo": {
+    "tableName": "Table 1",
     "sortingColumn": "column1",
     "isAscending": true
   },
@@ -9,6 +10,8 @@ export const DynamicColumns1: DynamicColumnDetails = {
     {
       "fieldName": "column1",
       "displayName": "Column 1",
+      "isColumnVisible": true,
+      "isFilter": true,
       "minWidth": 80,
       "maxWidth": 100,
       "metadata": {
@@ -18,6 +21,8 @@ export const DynamicColumns1: DynamicColumnDetails = {
     {
       "fieldName": "column2",
       "displayName": "Column 2",
+      "isColumnVisible": true,
+      "isFilter": true,
       "minWidth": 80,
       "maxWidth": 100,
       "metadata": {
@@ -29,6 +34,7 @@ export const DynamicColumns1: DynamicColumnDetails = {
 
 export const DynamicColumns: DynamicColumnDetails = {
   "columnInfo": {
+    "tableName": "Table 1",
     "sortingColumn": "fullname",
     "isAscending": true
   },
@@ -36,6 +42,8 @@ export const DynamicColumns: DynamicColumnDetails = {
     {
       "fieldName": "fullname",
       "displayName": "Name",
+      "isColumnVisible": true,
+      "isFilter": true,
       "minWidth": 80,
       "maxWidth": 100,
       "metadata": {
@@ -45,6 +53,8 @@ export const DynamicColumns: DynamicColumnDetails = {
     {
       "fieldName": "companyname",
       "displayName": "Company Name",
+      "isColumnVisible": true,
+      "isFilter": true,
       "minWidth": 80,
       "maxWidth": 100,
       "metadata": {
@@ -54,6 +64,8 @@ export const DynamicColumns: DynamicColumnDetails = {
     {
       "fieldName": "cb_athenabusinesslegalname",
       "displayName": "Legal Name",
+      "isColumnVisible": true,
+      "isFilter": true,
       "minWidth": 80,
       "maxWidth": 100,
       "metadata": {
@@ -63,6 +75,8 @@ export const DynamicColumns: DynamicColumnDetails = {
     {
       "fieldName": "address1_composite",
       "displayName": "Address",
+      "isColumnVisible": true,
+      "isFilter": true,
       "minWidth": 80,
       "maxWidth": 100,
       "metadata": {
@@ -72,36 +86,44 @@ export const DynamicColumns: DynamicColumnDetails = {
     {
       "fieldName": "createdon",
       "displayName": "Created On",
+      "isColumnVisible": true,
+      "isFilter": true,
       "minWidth": 80,
       "maxWidth": 100,
       "metadata": {
         "type": "date",
-        "dateFormat": "yyyy-MM-dd"
+        "dateFormat": "YYYY-MM-DD"
       }
     },
     {
       "fieldName": "modifiedon",
       "displayName": "Modified On",
+      "isColumnVisible": true,
+      "isFilter": true,
       "minWidth": 80,
       "maxWidth": 100,
       "metadata": {
         "type": "dateTime",
-        "dateFormat": "yyyy-MM-dd hh:mm a"
+        "dateFormat": "YYYY-MM-DD hh:mm a"
       }
     },
     {
       "fieldName": "cb_lastactivitydate",
       "displayName": "Last Activity Date",
+      "isColumnVisible": true,
+      "isFilter": true,
       "minWidth": 80,
       "maxWidth": 100,
       "metadata": {
         "type": "date",
-        "dateFormat": "yyyy-MM-dd"
+        "dateFormat": "YYYY-MM-DD"
       }
     },
     {
       "fieldName": "cb_programleadsource",
       "displayName": "Program Lead Source",
+      "isColumnVisible": true,
+      "isFilter": true,
       "minWidth": 80,
       "maxWidth": 100,
       "metadata": {
@@ -111,6 +133,8 @@ export const DynamicColumns: DynamicColumnDetails = {
     {
       "fieldName": "statuscode",
       "displayName": "Lead Status",
+      "isColumnVisible": true,
+      "isFilter": true,
       "minWidth": 80,
       "maxWidth": 100,
       "metadata": {

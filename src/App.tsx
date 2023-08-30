@@ -1,12 +1,16 @@
 import { Box } from "@cloudscape-design/components";
 import CloudscapeTable from "./Components/CloudscapeTable/CloudscapeTable";
-import { DynamicColumns } from "./MockData/AllColumns";
-import { RowData } from "./MockData/AllItems";
 
 export default function App() {
+  const props = {
+    kpiEntityId: 'kpiId',
+    kpiEntityName: 'kpiEntityName',
+    pcfContext: '',
+  };
+
   return (
     <Box>
-      <CloudscapeTable allColumns={DynamicColumns} allItems={RowData}></CloudscapeTable>
+      <CloudscapeTable kpiEntityId={props.kpiEntityId} kpiEntityName={props.kpiEntityName} pcfContext={props.pcfContext}></CloudscapeTable>
     </Box>
   );
 }

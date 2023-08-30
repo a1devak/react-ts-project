@@ -5,6 +5,7 @@ export interface DynamicColumnDetails {
 }
 
 export interface ColumnInfo {
+  tableName: string;
   sortingColumn: string;
   isAscending: boolean;
 }
@@ -12,14 +13,17 @@ export interface ColumnInfo {
 export interface DataEntity {
   fieldName: string;
   displayName: string;
+  isColumnVisible : boolean;
+  isFilter: boolean;
   minWidth: number;
   maxWidth: number;
   metadata: Metadata;
 }
 
-export type ColumnDataType = 'link' | 'string' | 'date' | 'dateTime' | 'number' | 'boolean';
+export type ColumnDataType = 'externalLink' | 'link' | 'string' | 'date' | 'dateTime' | 'number' | 'boolean';
 
 export interface Metadata {
   type: ColumnDataType;
   dateFormat?: string;
+  link?: string;
 }

@@ -10,7 +10,7 @@ export const RowData1 = [
   }
 ];
 
-export const RowData = [
+export const RowData: any[] = [
   {
     "@odata.etag": "W/\"42200928\"",
     "leadid": "4407154c-24b2-4aeb-bb05-f2d4ffcf40bd",

@@ -10,7 +10,6 @@ export const TableNoMatchState = ({ onClearFilter }: { onClearFilter: () => void
           {"We cant find a match."}
         </Box>
       </div>
-      <Button onClick={onClearFilter}>Clear filter</Button>
     </SpaceBetween>
   </Box>
 );
@@ -19,12 +18,8 @@ export const TableEmptyState = ({ resourceName }: { resourceName: string }) => (
   <Box margin={{ vertical: "xs" }} textAlign="center" color="inherit">
     <SpaceBetween size="xxs">
       <div>
-        <b>No {resourceName.toLowerCase()}s</b>
-        <Box variant="p" color="inherit">
-          No {resourceName.toLowerCase()}s associated with this resource.
-        </Box>
+        <b>{resourceName}</b>
       </div>
-      <Button>Create {resourceName.toLowerCase()}</Button>
     </SpaceBetween>
   </Box>
 );
@@ -39,7 +34,7 @@ export const propertyFilterI18nStrings: (resource?: any) => PropertyFilterProps.
   dismissAriaLabel: "Dismiss",
   clearAriaLabel: "Clear",
 
-  filteringPlaceholder: `Filter ${resource} by text, property or value`,
+  filteringPlaceholder: "Filter by keyword",
   groupValuesText: "Values",
   groupPropertiesText: "Tag",
   operatorsText: "Operators",
