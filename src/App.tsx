@@ -10,7 +10,7 @@ export default function App() {
 
   return (
     <Box>
-      <CloudscapeTable kpiEntityId={props.kpiEntityId} kpiEntityName={props.kpiEntityName} pcfContext={props.pcfContext}></CloudscapeTable>
+      <CloudscapeTable kpiEntityId={props.kpiEntityId} kpiEntityName={props.kpiEntityName} pcfContext={props.pcfContext} itemsPerPage={10}></CloudscapeTable>
     </Box>
   );
 }

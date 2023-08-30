@@ -16,7 +16,7 @@ import {
   generateFilteringProperties,
   generateVisibleContentOptions,
 } from "./CloudscapeTableConfig";
-import { DynamicColumnDetails } from "./CloudscapeInterface";
+import { DataEntity, DynamicColumnDetails } from "./CloudscapeInterface";
 import {
   Preferences,
   TableEmptyState,
@@ -30,26 +30,42 @@ import * as React from "react";
 import { useEffect } from "react";
 import { DynamicColumns } from "../../MockData/AllColumns";
 import { RowData } from "../../MockData/AllItems";
+import moment from "moment-timezone";
+import { DefaultDateFormat, DefaultDateTimeFormat } from "./CellComponents";
 
 interface CloudscapeTableProps {
   kpiEntityId: string;
   kpiEntityName: string;
   pcfContext: any;
+  itemsPerPage: number;
 }
-const CloudscapeTable: React.FC<CloudscapeTableProps> = ({ kpiEntityId, kpiEntityName, pcfContext }) => {
+const CloudscapeTable: React.FC<CloudscapeTableProps> = ({
+  kpiEntityId,
+  kpiEntityName,
+  pcfContext,
+}) => {
   const [dataLoading, setDataLoading] = React.useState(false);
-  const [dataLoadingStatus, setDataLoadingStatus] = React.useState<"loading" | "error" | "success">("loading");
+  const [dataLoadingStatus, setDataLoadingStatus] = React.useState<
+    "loading" | "error" | "success"
+  >("loading");
 
   const [primaryEntity, setPrimaryEntityName] = React.useState("");
-  const [allColumns, setAllColumns] = React.useState<DynamicColumnDetails | undefined>();
+  const [allColumns, setAllColumns] = React.useState<
+    DynamicColumnDetails | undefined
+  >();
   const [allItems, setAllItems] = React.useState<any | undefined>();
 
-  const [tableDefaultPreferences, setTableDefaultPreferences] = React.useState<CollectionPreferencesProps.Preferences>({});
+  const [tableDefaultPreferences, setTableDefaultPreferences] =
+    React.useState<CollectionPreferencesProps.Preferences>({});
 
-  const [tableColumnDefinitions, setTableColumnDefinitions] = React.useState<TableProps.ColumnDefinition<any>[]>([]);
+  const [tableColumnDefinitions, setTableColumnDefinitions] = React.useState<
+    TableProps.ColumnDefinition<any>[]
+  >([]);
   const [tableRowData, setTableRowData] = React.useState<any[]>([]);
 
-  const [filteringProperties, setFilteringProperties] = React.useState<PropertyFilterProps.FilteringProperty[]>([]);
+  const [filteringProperties, setFilteringProperties] = React.useState<
+    PropertyFilterProps.FilteringProperty[]
+  >([]);
   const [query, setQuery] = React.useState(BLANK_SEARCH_AND);
 
   // generating Table default preferences from allColumns
@@ -69,7 +85,11 @@ const CloudscapeTable: React.FC<CloudscapeTableProps> = ({ kpiEntityId, kpiEntit
   // generating Table column definitions from allColumns
   useEffect(() => {
     if (allColumns) {
-      const columnDefinitions = generateColumnDefinitions(allColumns, pcfContext, primaryEntity);
+      const columnDefinitions = generateColumnDefinitions(
+        allColumns,
+        pcfContext,
+        primaryEntity
+      );
       console.log("columnDefinitions ", columnDefinitions);
       setTableColumnDefinitions(columnDefinitions);
     }
@@ -101,27 +121,11 @@ const CloudscapeTable: React.FC<CloudscapeTableProps> = ({ kpiEntityId, kpiEntit
   }
 
 
-  function findFieldName(rowData: any[], allColumns: DynamicColumnDetails): string | null {
-    for (const dataEntity of allColumns.data) {
-      if (dataEntity.fieldName in rowData) {
-        console.log("dataEntity.fieldName ", dataEntity.fieldName);
-        
-        return dataEntity.fieldName;
-      }
-    }
-    return null; // Field name not found in visible columns
-  }
-
   const dynamicsHandler = async () => {
     setDataLoading(true);
 
     try {
       if (kpiEntityId) {
-        var fetchData = {
-          cb_kpimasterdataid: kpiEntityId,
-        };
-        console.log("fetchData.cb_kpimasterdataid", fetchData.cb_kpimasterdataid);
-
         mockAsyncOperation().then(
           (results: any) => {
             if (results) {
@@ -131,12 +135,7 @@ const CloudscapeTable: React.FC<CloudscapeTableProps> = ({ kpiEntityId, kpiEntit
               mockAsyncOperation().then(
                 (results: any) => {
                   if (results) {
-                    const parsedData = RowData.map((row) => {
-                      return {
-                        ...row,
-                      }
-                    });
-                    findFieldName(RowData, DynamicColumns);
+                    const parsedData = modifyRowData(RowData, DynamicColumns);
                     setAllItems(parsedData);
                     setDataLoadingStatus("success");
                   }
@@ -155,7 +154,6 @@ const CloudscapeTable: React.FC<CloudscapeTableProps> = ({ kpiEntityId, kpiEntit
           }
         );
       }
-
     } catch (error) {
       console.error("An error occurred:", error);
       setDataLoadingStatus("error");
@@ -163,6 +161,49 @@ const CloudscapeTable: React.FC<CloudscapeTableProps> = ({ kpiEntityId, kpiEntit
       setDataLoading(false);
     }
   };
+
+  function modifyRowData(
+    rowData: any[],
+    allColumns: DynamicColumnDetails
+  ): any[] {
+    const modifiedData = rowData.map((row) => {
+      const modifiedRow = { ...row };
+
+      allColumns.data.forEach((dataEntity) => {
+        if (dataEntity.isColumnVisible && dataEntity.fieldName in row) {
+          if (dataEntity.metadata.type === "date") {
+            const originalDate = row[dataEntity.fieldName];
+            if (originalDate) {
+              modifiedRow[dataEntity.fieldName] = moment(originalDate).format(
+                dataEntity.metadata.dateFormat || DefaultDateFormat
+              );
+            }
+          }
+
+          if (dataEntity.metadata.type === "dateTime") {
+            const originalDate = row[dataEntity.fieldName];
+            if (originalDate) {
+              modifiedRow[dataEntity.fieldName] = moment(originalDate).format(
+                dataEntity.metadata.dateFormat || DefaultDateTimeFormat
+              );
+            }
+          }
+
+          if (dataEntity.metadata.type === "boolean") {
+            const originalData = row[dataEntity.fieldName];
+            modifiedRow[dataEntity.fieldName] = originalData ? "Yes" : "No";
+          }
+
+          // Add more conditions for other data types if needed
+        }
+      });
+
+      return modifiedRow;
+    });
+
+    console.log("modifyRowData ", JSON.stringify(modifiedData));
+    return modifiedData;
+  }
 
   const getPrimaryEntityNameFromFetchXml = (fetchXml: string): string => {
     let primaryEntityName: string = "";
@@ -174,7 +215,14 @@ const CloudscapeTable: React.FC<CloudscapeTableProps> = ({ kpiEntityId, kpiEntit
     return primaryEntityName;
   };
 
-  const { items, actions, filteredItemsCount, collectionProps, paginationProps, propertyFilterProps } = useCollection(tableRowData, {
+  const {
+    items,
+    actions,
+    filteredItemsCount,
+    collectionProps,
+    paginationProps,
+    propertyFilterProps,
+  } = useCollection(tableRowData, {
     propertyFiltering: {
       filteringProperties,
       empty: <TableEmptyState resourceName="No results" />,
@@ -224,7 +272,11 @@ const CloudscapeTable: React.FC<CloudscapeTableProps> = ({ kpiEntityId, kpiEntit
           wrapLines={tableDefaultPreferences.wrapLines}
           stripedRows={tableDefaultPreferences.stripedRows}
           contentDensity={tableDefaultPreferences.contentDensity}
-          header={<Header counter={`(${tableRowData?.length})`}>{allColumns?.columnInfo.tableName || ""}</Header>}
+          header={
+            <Header counter={`(${tableRowData?.length})`}>
+              {allColumns?.columnInfo.tableName || ""}
+            </Header>
+          }
           filter={
             <PropertyFilter
               i18nStrings={propertyFilterI18nStrings("Table")}
@@ -233,12 +285,21 @@ const CloudscapeTable: React.FC<CloudscapeTableProps> = ({ kpiEntityId, kpiEntit
               {...propertyFilterProps}
               query={query}
               onChange={(event: any) => {
-                setQuery(event.detail.tokens?.length === 0 ? BLANK_SEARCH_AND : event.detail);
+                setQuery(
+                  event.detail.tokens?.length === 0
+                    ? BLANK_SEARCH_AND
+                    : event.detail
+                );
               }}
             />
           }
           {...collectionProps}
-          pagination={<Pagination {...paginationProps} ariaLabels={paginationAriaLabels(paginationProps.pagesCount)} />}
+          pagination={
+            <Pagination
+              {...paginationProps}
+              ariaLabels={paginationAriaLabels(paginationProps.pagesCount)}
+            />
+          }
           preferences={
             <Preferences
               preferences={tableDefaultPreferences}

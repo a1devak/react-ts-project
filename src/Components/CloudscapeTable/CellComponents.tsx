@@ -3,6 +3,9 @@ import { DataEntity } from "./CloudscapeInterface";
 import { Link } from "@cloudscape-design/components";
 import moment from "moment-timezone";
 
+export const DefaultDateFormat = "YYYY-MM-DD";
+export const DefaultDateTimeFormat = "YYYY-MM-DD HH:mm:ss";
+
 export const getDataToDisplay = (
   item: any,
   dataEntity: DataEntity,
@@ -17,7 +20,7 @@ export const getDataToDisplay = (
       if (data) {
         const desiredFormat = dataEntity?.metadata?.dateFormat
           ? dataEntity?.metadata?.dateFormat
-          : "YYYY-MM-DD";
+          : DefaultDateFormat;
         return moment(data).format(desiredFormat);
       }
       return ""; // Use your desired format
@@ -25,7 +28,7 @@ export const getDataToDisplay = (
       if (data) {
         const desiredFormat = dataEntity?.metadata?.dateFormat
           ? dataEntity?.metadata?.dateFormat
-          : "YYYY-MM-DD HH:mm:ss";
+          : DefaultDateTimeFormat;
         return moment(data).format(desiredFormat);
       }
       return "";
