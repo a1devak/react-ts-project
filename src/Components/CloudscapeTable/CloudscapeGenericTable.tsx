@@ -103,6 +103,10 @@ export const CloudscapeGenericTable: React.FC<CloudscapeGenericTableProps> = ({ 
     },
   });
 
+  const onSortingChange = (e: any) => {
+    console.log("Event ", e)
+  }
+
   return (
     <>
       <Table
@@ -118,6 +122,7 @@ export const CloudscapeGenericTable: React.FC<CloudscapeGenericTableProps> = ({ 
         stripedRows={tableDefaultPreferences.stripedRows}
         contentDensity={tableDefaultPreferences.contentDensity}
         header={<Header counter={`(${tableRowData?.length})`}>{allColumns?.columnInfo.tableName || ""}</Header>}
+        onSortingChange={onSortingChange}
         filter={
           <PropertyFilter
             i18nStrings={propertyFilterI18nStrings("Table")}

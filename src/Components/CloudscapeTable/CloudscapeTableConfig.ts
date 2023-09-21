@@ -2,6 +2,7 @@ import { CollectionPreferencesProps, TableProps } from "@cloudscape-design/compo
 import { PropertyFilterProps } from "@cloudscape-design/components/property-filter/interfaces";
 import { getDataToDisplay } from "./CellComponents";
 import { DataEntity, DynamicColumnDetails } from "./CloudscapeInterface";
+import moment from "moment-timezone";
 
 export const DEFAULT_PAGE_SIZE_IS_20 = 20;
 export const BLANK_SEARCH_AND = {
@@ -41,6 +42,12 @@ export function generateColumnDefinitions(dynamicColumnDetails: DynamicColumnDet
       maxWidth: dataEntity.maxWidth | 200,
       cell: (item: any) => getDataToDisplay(item, dataEntity, pcfContext, primaryEntityName),
       sortingField: dataEntity.fieldName,
+      sortingComparator: (a: any, b: any) => {
+        if (dataEntity.metadata.type === "dateTime") {
+          return moment(a[dataEntity.fieldName]).isBefore(b[dataEntity.fieldName]) ? -1 : 1;
+        }
+        return a[dataEntity.fieldName]?.localeCompare(b[dataEntity.fieldName]);
+      },
     } as TableProps.ColumnDefinition<DataEntity>;
   });
 

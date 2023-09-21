@@ -13,8 +13,8 @@ export interface ColumnInfo {
 export interface DataEntity {
   fieldName: string;
   displayName: string;
-  isColumnVisible : boolean;
-  isFilter: boolean;
+  isColumnVisible: boolean;
+  isFilterable: boolean;
   minWidth: number;
   maxWidth: number;
   metadata: Metadata;
